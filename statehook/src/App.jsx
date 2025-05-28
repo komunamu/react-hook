@@ -26,7 +26,7 @@ function App() {
     setTime(newTime);
   };
 
-  //User name input update for array
+  //If the initial state is a function, it will be executed only once during the initial rendering.
   const [names, setNames] = useState(() => heavyWork());
   const [input, setInput] = useState("");
 
