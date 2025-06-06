@@ -1,35 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useReducer } from "react";
+import "./App.css";
+
+const ACTION_TYPES = {
+  DEPOSIT: "deposit",
+  WITHDRAW: "withdraw",
+};
+const reducer = (state, action) => {
+  console.log("reducer called", state, action);
+  switch (action.type) {
+    case ACTION_TYPES.DEPOSIT:
+      return state + action.payload;
+      return state + action.payload;
+    case ACTION_TYPES.WITHDRAW:
+      return state - action.payload;
+    default:
+      throw new Error("Unknown action");
+  }
+};
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [number, setNumber] = useState(0);
+  const [money, dispatch] = useReducer(reducer, 0);
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <h2>Welcome to React Bank</h2>
+        <p>Balance: $ {money} </p>
+        <input
+          type="number"
+          value={number}
+          onChange={(e) => setNumber(parseInt(e.target.value))}
+          step="1000"
+        />
+        <button
+          onClick={() => {
+            dispatch({ type: ACTION_TYPES.DEPOSIT, payload: number });
+          }}
+        >
+          Deposit
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+        <button
+          onClick={() => {
+            dispatch({ type: ACTION_TYPES.WITHDRAW, payload: number });
+          }}
+        >
+          Withdraw
+        </button>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
