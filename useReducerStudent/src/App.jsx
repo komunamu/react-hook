@@ -1,35 +1,86 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useReducer } from "react";
+import "./App.css";
+import Student from "./student";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const initialState = {
+    count: 0,
+    students: [],
+  };
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "ADD":
+        const name = action.payload.name;
+        const newStudent = {
+          id: Date.now(0),
+          name,
+          isHere: false,
+        };
+        setName("");
+        return {
+          count: state.count + 1,
+          students: [...state.students, newStudent],
+        };
+      case "REMOVE":
+        return {
+          count: state.count - 1,
+          students: state.students.filter(
+            (student) => student.id !== action.payload.id
+          ),
+        };
+      case "TOGGLE":
+        return {
+          count: state.count,
+          students: state.students.map((student) => {
+            if (student.id === action.payload.id) {
+              return {
+                ...student,
+                isHere: !student.isHere,
+              };
+            }
+            return student;
+          }),
+        };
+      default:
+        return state;
+    }
+  };
+
+  const [name, setName] = useState("");
+  const [studentInfo, dispatch] = useReducer(reducer, initialState);
 
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <h2>Student attending</h2>
+        <p>Total Student No: {studentInfo.count}</p>
+        <input
+          type="text"
+          placeholder="Enter Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <button
+          onClick={() => {
+            dispatch({ type: "ADD", payload: { name } });
+          }}
+        >
+          Add
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+        {studentInfo.students.map((student) => {
+          return (
+            <Student
+              key={student.id}
+              name={student.name}
+              dispatch={dispatch}
+              id={student.id}
+              isHere={student.isHere}
+            />
+          );
+        })}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
