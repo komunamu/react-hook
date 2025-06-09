@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import Child from "./child/child";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [parentAge, setParentAge] = useState(0);
+  const [childAge, setChildAge] = useState(0);
+
+  const increaseParentAge = () => {
+    setParentAge(parentAge + 1);
+  };
+  const increaseChildAge = () => {
+    setChildAge(childAge + 1);
+  };
+
+  console.log("Parent rendering");
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div style={{ border: "2px solid navy", padding: "10px" }}>
+        <h1>Parent</h1>
+        <p>Age: {parentAge}</p>
+        <button onClick={increaseParentAge}>Increase parent age</button>
+        <button onClick={increaseChildAge}>Increase child age</button>
+        <Child name={"Bob"} age={childAge} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
